@@ -7,11 +7,11 @@
     </head>
 
     <body>
-        <h1>Hei opiskelijat!</h1>
+        <h1>Alueet</h1>
 
         <ol>
-            <li th:each="opiskelija: ${opiskelijat}">
-                <span th:text="${opiskelija.nimi}">opiskelijan nimi</span> <a th:href="${'/opiskelijat/' + opiskelija.id}">linkki</a>
+            <li th:each="alue: ${alueet}">
+                <a th:href="${'/alueet/' +alue.id}"><span th:text="${alue.nimi}">alueen nimi</span></a><span th:text="${alue.viestit}">alueen viestit</span><span th:text="${alue.viimeisin}">alueen viimeisin viesti</span>
             </li>
         </ol>
     </body>
