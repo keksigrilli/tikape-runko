@@ -3,6 +3,8 @@ package tikape.runko.domain;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Viesti {
     private Integer id;
@@ -48,6 +50,12 @@ public class Viesti {
         return pvm;
     }
 
+    public Integer getMoneskoViesti() {
+        return moneskoViesti;
+    }
+    public void setMoneskoViesti(Integer moneskoViesti) {
+        this.moneskoViesti = moneskoViesti;
+    }
 
     public void setAiheid(Integer aiheid) {
         this.aiheid = aiheid;

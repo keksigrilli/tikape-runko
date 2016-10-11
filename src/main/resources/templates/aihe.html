@@ -15,10 +15,23 @@
             <input type="submit" value="viestita"/>
         </form>
 
-        <ol>
-            <li th:each="viesti: ${viestit}">
-                <span th:text="${viesti.sisalto}">viestin sisalto</span><span th:text="${viesti.pvm}">viestin pvm</span>
-            </li>
-        </ol>
-    </body>
-</html>
+        <a class="button" href="">Takaisin</a>
+
+        <h5>Viestien lkm:</h5>
+
+        <form method="POST">
+            <select name="lkm">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+             <input type="submit" value="Vaihda lkm"/>
+        </form>        
+
+                            <p th:each="viesti: ${viestit}">
+                                <span th:text="${viesti.moneskoViesti}"></span><span th:text="${viesti.sisalto}">viestin sisalto</span><span th:text="${viesti.pvm}">viestin pvm</span>
+                            </p>
+
+                            </body>
+                            </html>

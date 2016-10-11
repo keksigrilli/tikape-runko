@@ -20,6 +20,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         Database database = new Database("jdbc:sqlite:forum.db");
+
         
         //Tämä metodi luo automaattisesti Opiskelija -tietokannan.
         // Katsokaa Database -luokasta sen toiminnallisuuta,
@@ -77,6 +78,16 @@ public class Main {
             
             return "";
             
+        });
+        
+        post("/aihe/:id", (req, res) -> {
+            viestiDao.setLkm(Integer.parseInt(req.queryParams("Vaihda lkm")));
+            
+            res.redirect("/aihe/" +Integer.parseInt(req.params("id")));
+            
+            return "";
+            
+
         });
         
     }

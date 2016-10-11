@@ -15,11 +15,15 @@ import java.util.Calendar;
 import java.util.List;
 import tikape.runko.domain.Viesti;
 
-public class ViestiDao implements Dao<Viesti, Integer>{
+public class ViestiDao implements Dao<Viesti, Integer> {
+
     private Database database;
+    private int lkm;
 
     public ViestiDao(Database database) {
         this.database = database;
+        this.lkm = 10;
+        
     }
 
     @Override
@@ -39,8 +43,6 @@ public class ViestiDao implements Dao<Viesti, Integer>{
         String sisalto = rs.getString("sisalto");
         Integer aiheid = rs.getInt("aiheid");
         String aika = rs.getString("aika");
-
-        
 
         rs.close();
         stmt.close();
@@ -62,8 +64,12 @@ public class ViestiDao implements Dao<Viesti, Integer>{
     public List<Viesti> getViestit(Integer id) throws SQLException {
         Connection conn = database.getConnection();
         //käyttötapaus 3/3
-        PreparedStatement stmt = conn.prepareStatement("SELECT Viesti.moneskoviesti AS monesko, Viesti.sisalto AS sisalto, Viesti.aika AS pvm FROM Viesti WHERE Viesti.aiheid = (SELECT aihe.id FROM aihe WHERE aihe.id = ?) ORDER BY moneskoViesti DESC");
+        PreparedStatement stmt = conn.prepareStatement("SELECT Viesti.moneskoviesti AS monesko,"
+                + " Viesti.sisalto AS sisalto, Viesti.aika AS pvm FROM Viesti"
+                + " WHERE Viesti.aiheid = (SELECT aihe.id FROM aihe WHERE aihe.id = ?)"
+                + " ORDER BY moneskoViesti ASC LIMIT ?");
         stmt.setObject(1, id);
+        stmt.setObject(2, lkm);
         ResultSet rs = stmt.executeQuery();
         List<Viesti> viestit = new ArrayList<>();
         while (rs.next()) {
@@ -71,6 +77,7 @@ public class ViestiDao implements Dao<Viesti, Integer>{
             String sisalto = rs.getString("sisalto");
             String aika = rs.getString("pvm");
             
+
             viestit.add(new Viesti(sisalto, aika, monesko));
         }
 
@@ -81,6 +88,38 @@ public class ViestiDao implements Dao<Viesti, Integer>{
         return viestit;
     }
     
+ public List<Viesti> getViestit(Integer id, Integer lkm) throws SQLException {
+        Connection conn = database.getConnection();
+        //käyttötapaus 3/3
+        PreparedStatement stmt = conn.prepareStatement("SELECT Viesti.moneskoviesti AS monesko,"
+                + " Viesti.sisalto AS sisalto, Viesti.aika AS pvm FROM Viesti"
+                + " WHERE Viesti.aiheid = (SELECT aihe.id FROM aihe WHERE aihe.id = ?)"
+                + " ORDER BY moneskoViesti ASC LIMIT ?");
+        stmt.setObject(1, id);
+        stmt.setObject(2, lkm);
+        ResultSet rs = stmt.executeQuery();
+        List<Viesti> viestit = new ArrayList<>();
+        while (rs.next()) {
+            Integer monesko = rs.getInt("monesko");
+            String sisalto = rs.getString("sisalto");
+            String aika = rs.getString("pvm");
+            
+
+            viestit.add(new Viesti(sisalto, aika, monesko));
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+
+        return viestit;
+    } 
+
+    public void setLkm(int lkm) {
+        this.lkm = lkm;
+    }
+ 
+
     public void save(String nimi, String viesti, Integer aiheid) throws SQLException {
         Integer monesko = 1;
         Connection conn = database.getConnection();
@@ -88,19 +127,25 @@ public class ViestiDao implements Dao<Viesti, Integer>{
         mones.setObject(1, aiheid);
         ResultSet rs = mones.executeQuery();
         boolean eka = rs.next();
-        if(eka) {
-            monesko = rs.getInt("mones");
+        if (eka) {
+            monesko += rs.getInt("mones");
         }
+        mones = conn.prepareStatement("SELECT DATETIME('now', 'localtime')");
+        rs = mones.executeQuery();
+        String pvm = rs.getString(1);         
         mones.close();
         rs.close();
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Viesti (kirjoittaja, sisalto, aiheid, aika, moneskoviesti) VALUES(?, ?, ?, '1997-12-10 14:44', ?)");
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Viesti (kirjoittaja, sisalto, aiheid, aika, moneskoviesti) VALUES(?, ?, ?, ?, ?)");
         stmt.setObject(1, nimi);
         stmt.setObject(2, viesti);
         stmt.setObject(3, aiheid);
-        stmt.setObject(4, monesko);
+        stmt.setObject(4, pvm);
+        stmt.setObject(5, monesko);
+
+        
         stmt.execute();
         stmt.close();
         conn.close();
     }
-    
+
 }
