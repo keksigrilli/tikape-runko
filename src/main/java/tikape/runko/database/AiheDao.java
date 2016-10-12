@@ -32,9 +32,12 @@ public class AiheDao implements Dao<Aihe, Integer> {
         }
         Integer id = rs.getInt("id");
         String nimi = rs.getString("nimi");
-        String kuvaus = rs.getString("sisalto");
+        String kuvaus = rs.getString("kuvaus");
+        Integer alueid = rs.getInt("alueid");
+        String kirjoittaja = rs.getString("kirjoittaja");
+        String luotu = rs.getString("luotu");
             
-        Aihe aihe = new Aihe(id, nimi, kuvaus);
+        Aihe aihe = new Aihe(id, alueid, kirjoittaja, nimi, kuvaus, luotu, null, null);
 
 
         rs.close();
@@ -55,11 +58,11 @@ public class AiheDao implements Dao<Aihe, Integer> {
             Integer id = rs.getInt("id");
             Integer alueid = rs.getInt("alueid");
             String nimi = rs.getString("nimi");
-            String sisalto = rs.getString("sisalto");
-            String aika = rs.getString("aika");
+            String kuvaus = rs.getString("kuvaus");
+            String luotu = rs.getString("luotu");
             String kirjoittaja = rs.getString("kirjoittaja");
             
-            aiheet.add(new Aihe(id, alueid, kirjoittaja, sisalto, nimi, aika, null));
+            aiheet.add(new Aihe(id, alueid, kirjoittaja, nimi, kuvaus, luotu, null, null));
 
         }
         
@@ -78,17 +81,25 @@ public class AiheDao implements Dao<Aihe, Integer> {
         kysy.setObject(1, id);
         ResultSet alueNimi = kysy.executeQuery();
         String alue = alueNimi.getString("alue");
-        PreparedStatement stmt = connection.prepareStatement("SELECT Aihe.id AS ID, Aihe.nimi AS 'Alue: " +alue +"', COUNT(viesti.id) AS 'Viestejä', viesti.aika AS 'Viimeisin viesti' FROM Alue LEFT JOIN Aihe ON Aihe.alueid = Alue.id LEFT JOIN viesti ON viesti.aiheid = aihe.id WHERE alue.nimi = '" +alue +"' GROUP BY Aihe.id ORDER BY COUNT(viesti.id) DESC");
+        PreparedStatement stmt = connection.prepareStatement("SELECT Aihe.id AS ID, Aihe.alueid AS ALUE, Aihe.nimi AS NIMI,"
+                                                            + " Aihe.kirjoittaja AS KIRJOITTAJA, Aihe.luotu AS LUOTU, Aihe.kuvaus AS KUVAUS,"
+                                                            + " COUNT(viesti.id) AS VIESTEJA, viesti.aika AS 'VIIMEISIN'"
+                                                            + " FROM Alue LEFT JOIN Aihe ON Aihe.alueid = Alue.id LEFT JOIN viesti ON viesti.aiheid = aihe.id"
+                                                            + " WHERE alue.nimi = '" +alue +"' GROUP BY Aihe.id ORDER BY COUNT(viesti.id) DESC");
 
         ResultSet rs = stmt.executeQuery();
         List<Aihe> aiheet = new ArrayList<>();
         while (rs.next()) {
             Integer aiheid = rs.getInt("ID");
-            String nimi= rs.getString("Alue: " +alue);
-            Integer viestit = rs.getInt("Viestejä");
-            String viimeisin = rs.getString("Viimeisin viesti");
+            String nimi= rs.getString("NIMI");
+            Integer viestit = rs.getInt("VIESTEJA");
+            String viimeisin = rs.getString("VIIMEISIN");
+            String kirjoittaja = rs.getString("KIRJOITTAJA");
+            String luotu = rs.getString("LUOTU");
+            String kuvaus = rs.getString("KUVAUS");
+            Integer alueid = rs.getInt("ALUE");
 
-            aiheet.add(new Aihe(aiheid, nimi, viestit, viimeisin));
+            aiheet.add(new Aihe(aiheid, alueid, kirjoittaja, nimi, kuvaus, luotu, viimeisin, viestit));
         }
 
         rs.close();
@@ -96,6 +107,26 @@ public class AiheDao implements Dao<Aihe, Integer> {
         connection.close();
 
         return aiheet;
+    }
+
+    public void save(Integer alueid, String nimi, String kuvaus, String kirjoittaja) throws Exception {
+        Connection conn = database.getConnection();
+        PreparedStatement aika = conn.prepareStatement("SELECT DATETIME('now', 'localtime')");
+        ResultSet rs = aika.executeQuery();
+        String luotu = rs.getString(1);         
+        aika.close();
+        rs.close();
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Aihe (alueid, nimi, kuvaus, kirjoittaja, luotu) VALUES(?, ?, ?, ?, ?)");
+        stmt.setObject(1, alueid);
+        stmt.setObject(2, nimi);
+        stmt.setObject(3, kuvaus);
+        stmt.setObject(4, kirjoittaja);
+        stmt.setObject(5, luotu);
+
+        
+        stmt.execute();
+        stmt.close();
+        conn.close();
     }
     
 }

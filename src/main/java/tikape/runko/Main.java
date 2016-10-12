@@ -33,27 +33,22 @@ public class Main {
         AlueDao alueDao = new AlueDao(database);
         AiheDao aiheDao = new AiheDao(database);
         ViestiDao viestiDao = new ViestiDao(database);
-        
-        // run:ssa koodattuna yksinkertainen tekstikäyttöliittymä foorumille.
-        // SITÄ SAA KEHITTÄÄ JA PARANNELLA :P
-        //run(alueDao, aiheDao, viestiDao);
-        // Kommentoituna localhostin toimintaa. En vielä jaksanut perehtyä siihen ollenkaan.
-        // Tärkeintä on mielestäni saada tekstikäyttöliittymä ensin toimimaan tärkeimmillä toiminnoilla.
-        get("/", (req, res) -> {
+
+        get("/", (req, res) -> { // Hakee indeksin
             HashMap map = new HashMap<>();
             map.put("viesti", "tervehdys");
 
             return new ModelAndView(map, "index");
         }, new ThymeleafTemplateEngine());
 
-        get("/alueet", (req, res) -> {
+        get("/alueet", (req, res) -> {  //Hakee Forumissa olevat alueet.
             HashMap map = new HashMap<>();
             map.put("alueet", alueDao.getAlueet());
 
             return new ModelAndView(map, "alueet");
         }, new ThymeleafTemplateEngine());
 
-        get("/alueet/:id", (req, res) -> {
+        get("/alueet/:id", (req, res) -> { // Hakee alueeseen liittyvät aiheet.
             HashMap map = new HashMap<>();
             map.put("alue", alueDao.findOne(Integer.parseInt(req.params("id"))));
             map.put("aiheet", aiheDao.getAiheet(Integer.parseInt(req.params("id"))));
@@ -61,65 +56,76 @@ public class Main {
             return new ModelAndView(map, "alue");
         }, new ThymeleafTemplateEngine());
         
-        get("/aihe/:id", (req, res) -> {
+        get("/alue/luo", (req, res) -> { //Hakee alueen luomis sivun. Tässä ei tapahdu mitään.
+            HashMap map = new HashMap<>();
+            
+
+            return new ModelAndView(map, "luoAlue");
+        }, new ThymeleafTemplateEngine());
+        
+        post("/alue/luo", (req, res) -> { // Luo uuden alueen
+            HashMap map = new HashMap<>();
+            map.put("nimiPuuttuu", "Alueella täytyy olla nimi!");
+            String nimi = req.queryParams("nimi");
+            String kuvaus = req.queryParams("kuvaus");
+            if(nimi.isEmpty()) {
+                return new ModelAndView(map,  "luoAlue");
+            }
+            alueDao.save(nimi, kuvaus);
+            res.redirect("/alueet");
+            return new ModelAndView(map,  "luoAlue"); // Jos nimi on syötetty, niin tällä rivillä ei ole virkaa. Se vain estää punaisia alleviivauksia.
+        }, new ThymeleafTemplateEngine());
+        
+        get("/alueet/:alueid/luo", (req, res) -> { // Hakee sivun jossa voi luoda uusia aiheita. TÄssä ei oikeastaan tapahdu mitään.
+            HashMap map = new HashMap<>();
+            
+
+            return new ModelAndView(map, "luoAihe");
+        }, new ThymeleafTemplateEngine());
+        
+         post("/alueet/:alueid/luo", (req, res) -> { // Luo uuden aiheen valittuun alueeseen.
+            HashMap map = new HashMap<>();
+            map.put("nimiPuuttuu", "Aiheella täytyy olla nimi!");
+            String nimi = req.queryParams("nimi");
+            String kuvaus = req.queryParams("kuvaus");
+            String kirjoittaja = req.queryParams("kirjoittaja");
+            if(nimi.isEmpty()) {
+                return new ModelAndView(map,  "luoAihe");
+            }
+            aiheDao.save(Integer.parseInt(req.params("alueid")), nimi, kuvaus, kirjoittaja);
+            res.redirect("/alueet/" +req.params("alueid"));
+            return new ModelAndView(map,  "luoAihe");
+        }, new ThymeleafTemplateEngine());
+         
+        get("/aiheet/:id/:page", (req, res) -> {  // Hakee aiheessa näytettävät viestit
             HashMap map = new HashMap<>();
             map.put("aihe", aiheDao.findOne(Integer.parseInt(req.params("id"))));
-            map.put("viestit", viestiDao.getViestit(Integer.parseInt(req.params("id"))));
+            // getViestit hakee nyt sivunumeron mukaisesti oikeat viestit.
+            map.put("viestit", viestiDao.getViestit(Integer.parseInt(req.params("id")), Integer.parseInt(req.params("page"))));
+            //Seuraava osa syöttää nettisivulle seuraavan sivun luvun page-muuttujana.
+            map.put("next", Integer.parseInt(req.params("page")) +1);
+            map.put("prev", Integer.parseInt(req.params("page")) -1);
 
             return new ModelAndView(map, "aihe");
         }, new ThymeleafTemplateEngine());
         
-        post("/aihe/:id", (req, res) -> {
-            String nimi = req.queryParams("nimi");
-            String viesti = req.queryParams("viesti");
-            viestiDao.save(nimi, viesti, Integer.parseInt(req.params("id")));
-            
-            res.redirect("/aihe/" +Integer.parseInt(req.params("id")));
-            
+        post("/aiheet/:id/:page", (req, res) -> { // Ottaa vastaan aiheeseen lähetettyä tietoa. Uusia viestejä, näytettävien viestin lkm.
+            if(!req.queryParams("viesti").isEmpty()){
+                String nimi = req.queryParams("nimi");
+                String viesti = req.queryParams("viesti");
+                viestiDao.save(nimi, viesti, Integer.parseInt(req.params("id")));
+            }
+            if(req.queryParams("lkm") != null) {
+                viestiDao.setLkm(Integer.parseInt(req.queryParams("lkm")));
+            }
+            res.redirect("/aiheet/" +Integer.parseInt(req.params("id")) +"/" +Integer.parseInt(req.params("page")));
             return "";
             
         });
         
-        post("/aihe/:id", (req, res) -> {
-            viestiDao.setLkm(Integer.parseInt(req.queryParams("Vaihda lkm")));
-            
-            res.redirect("/aihe/" +Integer.parseInt(req.params("id")));
-            
-            return "";
-            
-
-        });
         
     }
                 
     }
 
-    /*private static void run(AlueDao alueDao, AiheDao aiheDao, ViestiDao viestiDao) throws SQLException {
-        //Tässä on nyt nopea käyttötapausten toteutukset tekstikäyttöliittymällä
-        //huomasin tehdessäni tätä, että sarakkeiden nimeäminen on turhaa,
-        //sillä SQL kysely ei palauta sarakkeiden nimiä, vain itse sarakkeet..
-        //Sarakkeiden nimet pitäisi siis saada näkymään joko ohjelmallisesti,
-        //tai sitten pitäisi lukea materiaalista tarkemmat ohjeet.
-        //Jokatapauksessa kun koodi siirretään nettiin, luulisi sarakkeiden nimet hoituvan helposti HTML koodilla.
-        //Käyttötapaus 1/3 hakeminen
-        List<Alue> alueet = alueDao.getAlueet();
-        Scanner lukija = new Scanner(System.in);
-        for (Alue alue : alueet) {
-            System.out.println(alue.getNimi() +"\t" +alue.getViestit() +"\t" +alue.getViimeisin());
-        }
-        //Käyttötapaus 2/3
-        System.out.println("Valitse alue:");
-        String alue = lukija.nextLine();
-        List<Aihe> aiheet = aiheDao.getAiheet(alue);
-        for (Aihe aihe : aiheet) {
-            System.out.println(aihe.getNimi() +"\t" +aihe.getViestit() +"\t" +aihe.getViimeisin());   
-        }
-        //Käyttötapaus 3/3
-        System.out.println("Valitse aihe: ");
-        String aihe = lukija.nextLine();
-        List<String> viestit = viestiDao.getViestit(aihe);
-        for (String viesti : viestit) {
-            System.out.println(viesti);   
-        }
-    }*/
-
+   

@@ -11,8 +11,10 @@
 
         <ol>
             <li th:each="aihe: ${aiheet}">
-                <a th:href="${'/aihe/' +aihe.id}"><span th:text="${aihe.nimi}">aiheen nimi</span></a><span th:text="${aihe.viestit}">aiheen viestit</span><span th:text="${aihe.viimeisin}">aiheen viimeisin viesti</span>
+                <a th:href="@{~/aiheet/{id}/1 (id=${aihe.id})}"><span th:text="${aihe.nimi}">aiheen nimi</span></a><span th:text="${aihe.viestit}">aiheen viestit</span><span th:text="${aihe.viimeisin}">aiheen viimeisin viesti</span>
             </li>
         </ol>
+        
+        <a th:href="@{~/alueet/{id}/luo (id = ${alue.id})}"><span>luo aihe</span></a>
     </body>
 </html>

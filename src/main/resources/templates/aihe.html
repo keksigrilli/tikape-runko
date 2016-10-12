@@ -8,14 +8,14 @@
 
     <body>
         <h1>Aihe: <span th:text="${aihe.nimi}"></span>!</h1>
-        <form method="POST" action="">
+        <form method="POST">
             Nimi:<br/>
             <input type="text" name="nimi"/><br/>
             <input type="text" name="viesti"/><br/>
             <input type="submit" value="viestita"/>
         </form>
 
-        <a class="button" href="">Takaisin</a>
+        <a th:href="@{~/alueet/{id}(id = ${aihe.alueid})}">Takaisin</a>
 
         <h5>Viestien lkm:</h5>
 
@@ -32,6 +32,6 @@
                             <p th:each="viesti: ${viestit}">
                                 <span th:text="${viesti.moneskoViesti}"></span><span th:text="${viesti.sisalto}">viestin sisalto</span><span th:text="${viesti.pvm}">viestin pvm</span>
                             </p>
-
+        <a th:href="@{~/aiheet/{id}/{page}(id=${aihe.id}, page = ${prev})}"> Edellinen sivu </a><h5>||</h5><a th:href="@{~/aiheet/{id}/{page}(id=${aihe.id}, page = ${next})}"> Seuraava sivu </a>
                             </body>
                             </html>

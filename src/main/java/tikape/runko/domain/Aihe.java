@@ -12,44 +12,53 @@ public class Aihe {
     private Integer id;
     private Integer alueid;
     private String kirjoittaja;
-    private String sisalto;
+    private String kuvaus;
     private String nimi;
     private String viimeisin;
     private Integer viestit;
+    private String luotu;
 
-    public Aihe(Integer id, Integer alueid, String kirjoittaja, String sisalto, String nimi, String viimeisin, Integer viestit) {
+    public Aihe(Integer id, Integer alueid, String kirjoittaja, String nimi, String kuvaus, String luotu, String viimeisin, Integer viestit) {
         this.id = id;
         this.alueid = alueid;
         this.kirjoittaja = kirjoittaja;
-        this.sisalto = sisalto;
+        this.kuvaus = kuvaus;
         this.nimi = nimi;
         this.viimeisin = viimeisin;
         this.viestit = viestit;
-    }
-    
-    public Aihe(Integer id, String nimi, String kuvaus) {
-        this(id, null, null, kuvaus, nimi, null, null);
-    }
-
-     public Aihe(Integer id, String nimi, Integer viestit, String viimeisin) {
-        this(id, null, null, null, nimi, viimeisin, viestit);
-    }
-
-
-    public Aihe(Integer alueid, String kirjoittaja, String nimi, String sisalto, String viimeisin) {
-        this(null, alueid, kirjoittaja, sisalto, nimi, viimeisin, null);
-    }
-
-    public Aihe(String nimi, Integer viestit, String viimeisin) {
-        this(null, null, null, null, nimi, viimeisin, viestit);
-        
-    }
-    public Integer getAlueid() {
-        return alueid;
+        this.luotu = luotu;
     }
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getAlueid() {
+        return alueid;
+    }
+
+    public void setAlueid(Integer alueid) {
+        this.alueid = alueid;
+    }
+
+    public String getKirjoittaja() {
+        return kirjoittaja;
+    }
+
+    public void setKirjoittaja(String kirjoittaja) {
+        this.kirjoittaja = kirjoittaja;
+    }
+
+    public String getKuvaus() {
+        return kuvaus;
+    }
+
+    public void setKuvaus(String kuvaus) {
+        this.kuvaus = kuvaus;
     }
 
     public String getNimi() {
@@ -60,50 +69,31 @@ public class Aihe {
         this.nimi = nimi;
     }
 
-    public String getKirjoittaja() {
-        return kirjoittaja;
-    }
-
-    public Integer getViestit() {
-        return viestit;
-    }
-
     public String getViimeisin() {
         return viimeisin;
-    }
-
-    public void setKirjoittaja(String kirjoittaja) {
-        this.kirjoittaja = kirjoittaja;
-    }
-
-    public void setViestit(Integer viestit) {
-        this.viestit = viestit;
     }
 
     public void setViimeisin(String viimeisin) {
         this.viimeisin = viimeisin;
     }
 
-    public String getSisalto() {
-        return sisalto;
+    public Integer getViestit() {
+        return viestit;
     }
 
-
-
-    public void setAlueid(Integer alueid) {
-        this.alueid = alueid;
+    public void setViestit(Integer viestit) {
+        this.viestit = viestit;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public String getLuotu() {
+        return luotu;
     }
 
-
-    
-
-    public void setSisalto(String sisalto) {
-        this.sisalto = sisalto;
+    public void setLuotu(String luotu) {
+        this.luotu = luotu;
     }
+
+   
 
     
     

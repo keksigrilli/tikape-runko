@@ -73,17 +73,21 @@ public class AlueDao implements Dao<Alue, Integer>{
         Connection connection = database.getConnection();
         //käyttötapaus 1/3 kysely
         PreparedStatement stmt =
-                connection.prepareStatement("SELECT Alue.id AS ID, Alue.nimi AS Alue, COUNT(Viesti.id) AS 'Viestejä yhteensä', viesti.aika AS 'Viimeisin viesti' FROM Alue LEFT JOIN Aihe ON Alue.id = Aihe.Alueid LEFT JOIN Viesti ON Aihe.id = Viesti.aiheid GROUP BY Alue.id ORDER BY COUNT(viesti.id) DESC");
+                connection.prepareStatement("SELECT Alue.id AS ID, Alue.nimi AS ALUE, Alue.kuvaus AS KUVAUS,"
+                                        + " COUNT(Viesti.id) AS VIESTEJA, viesti.aika AS UUSIN"
+                                        + " FROM Alue LEFT JOIN Aihe ON Alue.id = Aihe.Alueid"
+                                        + " LEFT JOIN Viesti ON Aihe.id = Viesti.aiheid GROUP BY Alue.id ORDER BY COUNT(viesti.id) DESC");
 
         ResultSet rs = stmt.executeQuery();
         List<Alue> alueet = new ArrayList<>();
         while (rs.next()) {
-            String nimi = rs.getString("Alue");
-            Integer viestit = rs.getInt("Viestejä yhteensä");
-            String aika = rs.getString("Viimeisin viesti");
+            String nimi = rs.getString("ALUE");
+            Integer viestit = rs.getInt("VIESTEJA");
+            String aika = rs.getString("UUSIN");
             Integer id = rs.getInt("ID");
+            String kuvaus = rs.getString("KUVAUS");
 
-            alueet.add(new Alue(id, nimi, viestit, aika));
+            alueet.add(new Alue(id, nimi, kuvaus, viestit, aika));
             
         }
 
@@ -92,5 +96,17 @@ public class AlueDao implements Dao<Alue, Integer>{
         connection.close();
 
         return alueet;
+    }
+
+    public void save(String nimi, String kuvaus) throws Exception{
+        Connection conn = database.getConnection();
+
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Alue (nimi, kuvaus) VALUES(?, ?)");
+        stmt.setObject(1, nimi);
+        stmt.setObject(2, kuvaus);
+        
+        stmt.execute();
+        stmt.close();
+        conn.close();
     }
 }

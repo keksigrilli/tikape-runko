@@ -39,7 +39,7 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         }
 
         Integer id = rs.getInt("id");
-        String nimi = rs.getString("kirjoittaja");
+        String kirjoittaja = rs.getString("kirjoittaja");
         String sisalto = rs.getString("sisalto");
         Integer aiheid = rs.getInt("aiheid");
         String aika = rs.getString("aika");
@@ -60,52 +60,30 @@ public class ViestiDao implements Dao<Viesti, Integer> {
     public void delete(Integer key) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    public List<Viesti> getViestit(Integer id) throws SQLException {
-        Connection conn = database.getConnection();
-        //käyttötapaus 3/3
-        PreparedStatement stmt = conn.prepareStatement("SELECT Viesti.moneskoviesti AS monesko,"
-                + " Viesti.sisalto AS sisalto, Viesti.aika AS pvm FROM Viesti"
-                + " WHERE Viesti.aiheid = (SELECT aihe.id FROM aihe WHERE aihe.id = ?)"
-                + " ORDER BY moneskoViesti ASC LIMIT ?");
-        stmt.setObject(1, id);
-        stmt.setObject(2, lkm);
-        ResultSet rs = stmt.executeQuery();
-        List<Viesti> viestit = new ArrayList<>();
-        while (rs.next()) {
-            Integer monesko = rs.getInt("monesko");
-            String sisalto = rs.getString("sisalto");
-            String aika = rs.getString("pvm");
-            
-
-            viestit.add(new Viesti(sisalto, aika, monesko));
-        }
-
-        rs.close();
-        stmt.close();
-        conn.close();
-
-        return viestit;
-    }
     
- public List<Viesti> getViestit(Integer id, Integer lkm) throws SQLException {
+ public List<Viesti> getViestit(Integer ide, Integer page) throws SQLException {
         Connection conn = database.getConnection();
         //käyttötapaus 3/3
-        PreparedStatement stmt = conn.prepareStatement("SELECT Viesti.moneskoviesti AS monesko,"
-                + " Viesti.sisalto AS sisalto, Viesti.aika AS pvm FROM Viesti"
-                + " WHERE Viesti.aiheid = (SELECT aihe.id FROM aihe WHERE aihe.id = ?)"
-                + " ORDER BY moneskoViesti ASC LIMIT ?");
-        stmt.setObject(1, id);
+        PreparedStatement stmt = conn.prepareStatement("SELECT viesti.id AS ID, viesti.kirjoittaja AS AUTHOR,"
+                                                    + " viesti.aiheid AS AIHEID, viesti.moneskoviesti AS MONESKO,"
+                                                    + " viesti.sisalto AS SISALTO, viesti.aika AS AIKA FROM Viesti"
+                                                    + " WHERE Viesti.aiheid = (SELECT aihe.id FROM aihe WHERE aihe.id = ?)"
+                                                    + " ORDER BY moneskoViesti ASC LIMIT ? OFFSET ?");
+        stmt.setObject(1, ide);
         stmt.setObject(2, lkm);
+        stmt.setObject(3, lkm * (page -1));
         ResultSet rs = stmt.executeQuery();
         List<Viesti> viestit = new ArrayList<>();
         while (rs.next()) {
-            Integer monesko = rs.getInt("monesko");
-            String sisalto = rs.getString("sisalto");
-            String aika = rs.getString("pvm");
+            Integer id = rs.getInt("ID");
+            String kirjoittaja = rs.getString("AUTHOR");
+            String sisalto = rs.getString("SISALTO");
+            Integer aiheid = rs.getInt("AIHEID");
+            String aika = rs.getString("AIKA");
+            Integer monesko = rs.getInt("MONESKO");
+            System.out.println(kirjoittaja +", " +sisalto +", " +aika +", " +monesko);
             
-
-            viestit.add(new Viesti(sisalto, aika, monesko));
+            viestit.add(new Viesti(id, aiheid, kirjoittaja, sisalto, aika, monesko));
         }
 
         rs.close();
@@ -120,10 +98,11 @@ public class ViestiDao implements Dao<Viesti, Integer> {
     }
  
 
-    public void save(String nimi, String viesti, Integer aiheid) throws SQLException {
+    public void save(String kirjoittaja, String viesti, Integer aiheid) throws SQLException {
         Integer monesko = 1;
         Connection conn = database.getConnection();
-        PreparedStatement mones = conn.prepareStatement("SELECT COUNT(viesti.id) AS mones FROM Viesti WHERE viesti.aiheid = ?");
+        PreparedStatement mones = conn.prepareStatement("SELECT viesti.moneskoviesti AS mones FROM Viesti WHERE viesti.aiheid = ?"
+                                                    + " ORDER BY viesti.moneskoviesti DESC LIMIT 1");
         mones.setObject(1, aiheid);
         ResultSet rs = mones.executeQuery();
         boolean eka = rs.next();
@@ -135,8 +114,9 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         String pvm = rs.getString(1);         
         mones.close();
         rs.close();
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Viesti (kirjoittaja, sisalto, aiheid, aika, moneskoviesti) VALUES(?, ?, ?, ?, ?)");
-        stmt.setObject(1, nimi);
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Viesti (kirjoittaja, sisalto, aiheid, aika, moneskoviesti)"
+                                                    + " VALUES(?, ?, ?, ?, ?)");
+        stmt.setObject(1, kirjoittaja);
         stmt.setObject(2, viesti);
         stmt.setObject(3, aiheid);
         stmt.setObject(4, pvm);

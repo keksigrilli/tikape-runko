@@ -20,28 +20,40 @@ public class Alue {
         this.viimeisin = viimeisin;
     }
 
-    public Alue(String nimi, String kuvaus) {
-        this(null, nimi, kuvaus, null, null);
-    }
-    
-    public Alue(Integer id, String nimi, Integer viestit, String viimeisin) {
-        this(id, nimi, null, viestit, viimeisin);
-    }
-
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNimi() {
+        return nimi;
+    }
+
+    public void setNimi(String nimi) {
+        this.nimi = nimi;
+    }
+
+    public String getKuvaus() {
+        return kuvaus;
+    }
+
+    public void setKuvaus(String kuvaus) {
+        this.kuvaus = kuvaus;
     }
 
     public Integer getViestit() {
         return viestit;
     }
 
-    public String getViimeisin() {
-        return viimeisin;
-    }
-
     public void setViestit(Integer viestit) {
         this.viestit = viestit;
+    }
+
+    public String getViimeisin() {
+        return viimeisin;
     }
 
     public void setViimeisin(String viimeisin) {
@@ -49,28 +61,6 @@ public class Alue {
     }
     
 
-    public String getKuvaus() {
-        return kuvaus;
-    }
 
-    public String getNimi() {
-        return nimi;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setKuvaus(String kuvaus) {
-        this.kuvaus = kuvaus;
-    }
-
-    public void setNimi(String nimi) {
-        this.nimi = nimi;
-    }
-    
-    
-    
-    
     
 }
