@@ -4,16 +4,36 @@
     <head>
         <title>Otsikko</title>
         <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" type="text/css" href="http://www.polyconvex.com/tikape/site.css"></link>        
     </head>
 
     <body>
-        <h1>Alueet</h1>
 
-        <ol>
-            <li th:each="alue: ${alueet}">
-                <a th:href="${'/alueet/' +alue.id}"><span th:text="${alue.nimi}">alueen nimi</span></a><span th:text="${alue.viestit}">alueen viestit</span><span th:text="${alue.viimeisin}">alueen viimeisin viesti</span>
-            </li>
-        </ol>
-        <a href="alue/luo"><span>luo alue</span></a>
+        <div class="row text-center mainContainer">
+            <h1 class="mainTitle">Alueet</h1>
+            <div class="col-md-8 col-md-offset-2 aihePanelContainer">
+
+
+
+                <table>
+                    <tr class="tableHeaders">
+                        <th>Alue</th>
+                        <th>Viestimäärä</th>
+                        <th>Viimeisin viesti</th>
+                    </tr>
+                    <tr class="panel aihePanel" th:each="alue: ${alueet}">
+                        <td><a th:href="${'/alueet/' +alue.id}"><span th:text="${alue.nimi}">alueen nimi</span></a></td>
+                        <td><span th:text="${alue.viestit}">alueen viestit</span></td>
+                        <td><span th:text="${alue.viimeisin}">alueen viimeisin viesti</span></td>
+                    </tr>  
+
+
+                </table>
+
+                <a class="btn nappula" href="alue/luo"><span>luo alue</span></a>                    
+            </div> 
+        </div>
+
     </body>
 </html>
