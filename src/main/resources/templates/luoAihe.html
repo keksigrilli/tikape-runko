@@ -10,7 +10,7 @@
 
     <body>
         <h1>Luo uusi aihe</h1>
-        <a th:href="@{~/alueet/{id}(id = ${takas})}">Takaisin</a>
+        <a class="btn nappulaBack" th:href="@{~/alueet/{id}(id = ${takas})}">Takaisin</a>
         <h2><span th:text="${viestiPuuttuu}">täytyy olla nimi</span></h2>
         <h2><span th:text="${nimiviestiPuuttuu}">täytyy olla nimi</span></h2>
         <h2><span th:text="${nimiPuuttuu}">täytyy olla nimi</span></h2>

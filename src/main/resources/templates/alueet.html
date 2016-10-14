@@ -26,9 +26,9 @@
                         <th>Viimeisin viesti</th>
                     </tr>
                     <tr class="panel tauluPanel" th:each="alue: ${alueet}">
-                        <td><a th:href="${'/alueet/' +alue.id}"><span th:text="${alue.nimi}">alueen nimi</span></a></td>
-                        <td><span th:text="${alue.viestit}">alueen viestit</span></td>
-                        <td><span th:text="${alue.viimeisin}">alueen viimeisin viesti</span></td>
+                        <td><a th:href="${'/alueet/' +alue.id}"><span th:text="${alue.nimi}">Alueen nimi</span></a></td>
+                        <td><span th:text="${alue.viestit}">Alueen viestit</span></td>
+                        <td><span th:text="${alue.viimeisin}">Alueen viimeisin viesti</span></td>
                     </tr>  
 
 

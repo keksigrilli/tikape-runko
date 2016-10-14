@@ -11,33 +11,53 @@
     <body>
         <h1>Aihe: <span th:text="${aihe.nimi}"></span>!</h1>
         <!-- Tähän kohtaan ehkä enemmän tietoa aiheesta? Löytyy kirjoittaja, kuvaus, luomispvm jne. Getterit luokassa aihe -->
-        <a th:href="@{~/alueet/{id}(id = ${aihe.alueid})}">Takaisin</a>
 
-        <h5>Viestien lkm:</h5>
+        <a class="btn nappulaBack" th:href="@{~/alueet/{id}(id = ${aihe.alueid})}">Takaisin</a>
 
-        <form method="POST">
-            <select name="lkm">
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="40">40</option>
-                <option value="60">60</option>
-            </select>
-             <input type="submit" value="Vaihda lkm"/>
-        </form>        
+
         <!-- Tänne viestin kirjoittaja näkyviin -->
-        <p th:each="viesti: ${viestit}">
-            <span th:text="${viesti.moneskoViesti}"></span><span th:text="${viesti.sisalto}">viestin sisalto</span><span th:text="${viesti.pvm}">viestin pvm</span>
-        </p>
-        
-        <form method="POST" id="posti">
-            Nimi:<br/>
-            <input type="text" name="nimi"/><br/>
-            <textarea rows ="10" cols="50" name="viesti" form="posti">Kirjoita viesti...</textarea>
-            <input type="submit" value="viestita"/>
-        </form>
-        <br/>
-        <!-- Näiden linkkejen ulkoasua voisi siistiä -->
-        <a th:href="@{~/aiheet/{id}/1(id=${aihe.id})}">Ensimmäinen sivu</a><a th:href="@{~/aiheet/{id}/{page}(id=${aihe.id}, page = ${prev})}"> Edellinen sivu </a>
-        <a th:href="@{~/aiheet/{id}/{page}(id=${aihe.id}, page = ${next})}"> Seuraava sivu </a><a th:href="@{~/aiheet/{id}/{last}(id=${aihe.id}, last=${last})}">Viimeinen sivu</a>
+
+        <div class="row noPad areaContainer">
+
+            <div class="col-md-10 col-md-offset-1 viestitContainer">
+                <div class="viestitHeader">   
+                    <span class="changeroonieTitle">Viestien lkm:</span>
+                    <form class="changeroonie" method="POST">
+                        <select name="lkm">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="40">40</option>
+                            <option value="60">60</option>
+                        </select>
+                        <input class="changeroonieSubmit" type="submit" value="Vaihda lkm"/>
+                    </form> 
+                </div>              
+                
+                <div class="innerPad">
+                
+                <p class="viesti" th:each="viesti: ${viestit}">
+                    <span class="viestinumero" th:text="${viesti.moneskoViesti}"></span><span th:text="${viesti.sisalto}">viestin sisalto</span><span th:text="${viesti.pvm}">viestin pvm</span>
+                </p>
+
+                <form class="viestiFormi" method="POST" id="posti">
+                    Nimi:<br/>
+                    <input type="text" name="nimi"/><br/>
+                    <textarea rows ="10" cols="50" name="viesti" form="posti">Kirjoita viesti...</textarea>
+                    <input class="sendMessage" type="submit" value="viestita"/>
+                </form>
+                    
+                </div> 
+                
+
+        <div class="viestitFooter">
+            <!-- Näiden linkkejen ulkoasua voisi siistiä -->
+            <a th:href="@{~/aiheet/{id}/1(id=${aihe.id})}">Ensimmäinen sivu</a><a th:href="@{~/aiheet/{id}/{page}(id=${aihe.id}, page = ${prev})}"> Edellinen sivu </a>
+            <a th:href="@{~/aiheet/{id}/{page}(id=${aihe.id}, page = ${next})}"> Seuraava sivu </a><a th:href="@{~/aiheet/{id}/{last}(id=${aihe.id}, last=${last})}">Viimeinen sivu</a>
+        </div>                
+                    
+            </div>
+        </div>  
+
+
     </body>
 </html>
