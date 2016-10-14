@@ -9,14 +9,34 @@
     </head>
 
     <body>
-        <h1>Alue: <span th:text="${alue.nimi}"></span>!</h1>
-
-        <ol>
-            <li th:each="aihe: ${aiheet}">
-                <a th:href="@{~/aiheet/{id}/1 (id=${aihe.id})}"><span th:text="${aihe.nimi}">aiheen nimi</span></a><span th:text="${aihe.viestit}">aiheen viestit</span><span th:text="${aihe.viimeisin}">aiheen viimeisin viesti</span>
-            </li>
-        </ol>
         
-        <a th:href="@{~/alueet/{id}/luo (id = ${alue.id})}"><span>luo aihe</span></a>
+        <div class="row text-center mainContainer">
+            <h1 class="mainTitle">Alue: <span th:text="${alue.nimi}"></span>!</h1>
+            <div class="col-md-10 col-md-offset-1 PanelContainer">
+
+
+                <table>
+                    <tr class="tableHeaders">
+                        <th>Aihe</th>
+                        <th>Viestimäärä</th>
+                        <th>Viimeisin viesti</th>
+                    </tr>
+                    <tr class="panel tauluPanel" th:each="aihe: ${aiheet}">
+                        <td>
+                            <a th:href="@{~/aiheet/{id}/1 (id=${aihe.id})}"><span th:text="${aihe.nimi}">aiheen nimi</span></a>
+                        </td>
+                        <td><span th:text="${aihe.viestit}">aiheen viestit</span></td>
+                        <td><span th:text="${aihe.viimeisin}">aiheen viimeisin viesti</span></td>
+                    </tr>  
+
+
+                </table>
+
+                 <a class="btn nappula" th:href="@{~/alueet/{id}/luo (id = ${alue.id})}"><span>luo aihe</span></a>
+            </div> 
+        </div>        
+        
+        
+       
     </body>
 </html>

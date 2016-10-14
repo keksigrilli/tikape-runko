@@ -12,17 +12,18 @@
 
         <div class="row text-center mainContainer">
             <h1 class="mainTitle">Alueet</h1>
-            <div class="col-md-8 col-md-offset-2 aihePanelContainer">
+            <div class="col-md-10 col-md-offset-1 PanelContainer">
 
-
+<!-- HUOM! Pitäisikö alla olevan tableHeaders-taulukon näyttää Aluenimi (niinkuin nyt on), 
+    sitten Aiheiden lukumäärä viestien lukumäärän sijaan? --> 
 
                 <table>
                     <tr class="tableHeaders">
                         <th>Alue</th>
-                        <th>Viestimäärä</th>
+                        <th>Aiheiden määrä</th>
                         <th>Viimeisin viesti</th>
                     </tr>
-                    <tr class="panel aihePanel" th:each="alue: ${alueet}">
+                    <tr class="panel tauluPanel" th:each="alue: ${alueet}">
                         <td><a th:href="${'/alueet/' +alue.id}"><span th:text="${alue.nimi}">alueen nimi</span></a></td>
                         <td><span th:text="${alue.viestit}">alueen viestit</span></td>
                         <td><span th:text="${alue.viimeisin}">alueen viimeisin viesti</span></td>
