@@ -26,12 +26,12 @@ public class AlueDao implements Dao<Alue, Integer>{
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM alue WHERE alue.id = " +key);
         ResultSet rs = stmt.executeQuery();
         if(!rs.next()) {
-            return null;
-        }
+        return null;    
+    }
         Integer id = rs.getInt("id");
         String nimi = rs.getString("nimi");
         String kuvaus = rs.getString("kuvaus");
-            
+
         Alue alue = new Alue(id, nimi, kuvaus, null, null);
 
 
@@ -45,23 +45,7 @@ public class AlueDao implements Dao<Alue, Integer>{
 
     @Override
     public List<Alue> findAll() throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM alue");
-        ResultSet rs = stmt.executeQuery();
-        List<Alue> alueet = new ArrayList<>();
-        while (rs.next()) {
-            Integer id = rs.getInt("id");
-            String nimi = rs.getString("nimi");
-            String kuvaus = rs.getString("kuvaus");
-
-            alueet.add(new Alue(id, nimi, kuvaus, null, null));
-        }
-
-        rs.close();
-        stmt.close();
-        connection.close();
-
-        return alueet;
+        return null;
     }
 
     @Override
@@ -69,21 +53,24 @@ public class AlueDao implements Dao<Alue, Integer>{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    //Käyttötapaus 1/3
     public List<Alue> getAlueet() throws SQLException {
         Connection connection = database.getConnection();
-        //käyttötapaus 1/3 kysely
         PreparedStatement stmt =
                 connection.prepareStatement("SELECT Alue.id AS ID, Alue.nimi AS ALUE, Alue.kuvaus AS KUVAUS,"
                                         + " COUNT(Viesti.id) AS VIESTEJA, viesti.aika AS UUSIN"
-                                        + " FROM Alue LEFT JOIN Aihe ON Alue.id = Aihe.Alueid"
-                                        + " LEFT JOIN Viesti ON Aihe.id = Viesti.aiheid GROUP BY Alue.id ORDER BY COUNT(viesti.id) DESC");
+                                        + " FROM Alue LEFT JOIN Aihe ON alue.id = aihe.alueid"
+                                        + " LEFT JOIN viesti ON Aihe.id = viesti.aiheid GROUP BY Alue.id ORDER BY alue.nimi ASC");
 
         ResultSet rs = stmt.executeQuery();
         List<Alue> alueet = new ArrayList<>();
         while (rs.next()) {
+            String aika = "Ei viestejä";
             String nimi = rs.getString("ALUE");
             Integer viestit = rs.getInt("VIESTEJA");
-            String aika = rs.getString("UUSIN");
+            if(viestit > 0) {
+                aika = rs.getString("UUSIN");
+            }
             Integer id = rs.getInt("ID");
             String kuvaus = rs.getString("KUVAUS");
 
@@ -97,7 +84,7 @@ public class AlueDao implements Dao<Alue, Integer>{
 
         return alueet;
     }
-
+    // Lisää tietokantaan uuden alueen.
     public void save(String nimi, String kuvaus) throws Exception{
         Connection conn = database.getConnection();
 

@@ -10,11 +10,16 @@
 
     <body>
         <h1>Luo uusi aihe</h1>
+        <a th:href="@{~/alueet/{id}(id = ${takas})}">Takaisin</a>
+        <h2><span th:text="${viestiPuuttuu}">täytyy olla nimi</span></h2>
+        <h2><span th:text="${nimiviestiPuuttuu}">täytyy olla nimi</span></h2>
         <h2><span th:text="${nimiPuuttuu}">täytyy olla nimi</span></h2>
-        <form method="POST">
+        <form method="POST" id="posti">
             Nimi: <input type="text" name="nimi"/><br/>
-            Lyhyt kuvaus:  <input type="text" name="kuvaus"/><br/>
+            Lyhyt kuvaus:  <textarea rows="2" cols="50" name="kuvaus" form="posti"/><br/>
+            <br/>
             Kirjoittaja: <input type="text" name="kirjoittaja"/><br/>
+            Viesti: <textarea rows="10" cols="50" name ="viesti" form="posti"/>
              <input type="submit" value="viestita"/>
         </form>
     </body>

@@ -28,26 +28,6 @@ public class ViestiDao implements Dao<Viesti, Integer> {
 
     @Override
     public Viesti findOne(Integer key) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti WHERE id = ?");
-        stmt.setObject(1, key);
-
-        ResultSet rs = stmt.executeQuery();
-        boolean hasOne = rs.next();
-        if (!hasOne) {
-            return null;
-        }
-
-        Integer id = rs.getInt("id");
-        String kirjoittaja = rs.getString("kirjoittaja");
-        String sisalto = rs.getString("sisalto");
-        Integer aiheid = rs.getInt("aiheid");
-        String aika = rs.getString("aika");
-
-        rs.close();
-        stmt.close();
-        connection.close();
-
         return null;
     }
 
@@ -61,7 +41,7 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
- public List<Viesti> getViestit(Integer ide, Integer page) throws SQLException {
+    public List<Viesti> getViestit(Integer ide, Integer page) throws SQLException {
         Connection conn = database.getConnection();
         //käyttötapaus 3/3
         PreparedStatement stmt = conn.prepareStatement("SELECT viesti.id AS ID, viesti.kirjoittaja AS AUTHOR,"
@@ -96,9 +76,30 @@ public class ViestiDao implements Dao<Viesti, Integer> {
     public void setLkm(int lkm) {
         this.lkm = lkm;
     }
+    
+    // Palauttaa pienimmän määrän sivuja, joita tarvitaan näyttämään kaikki aiheen viestit.
+    public Integer maxPage(Integer aiheid) throws Exception{
+        Connection conn = database.getConnection();
+        PreparedStatement viestit = conn.prepareStatement("SELECT COUNT(viesti.id) AS MAARA FROM viesti WHERE viesti.aiheid = ?");
+        viestit.setObject(1, aiheid);
+        ResultSet rs = viestit.executeQuery();
+        boolean onko = rs.next();
+        if(!onko) {
+            return 0;
+        }
+        int maara = rs.getInt("MAARA");
+        rs.close();
+        viestit.close();
+        conn.close();
+        
+        return (maara/lkm) +1;
+    }
  
-
+    // Lisää viestin tietokantaan
     public void save(String kirjoittaja, String viesti, Integer aiheid) throws SQLException {
+        if(kirjoittaja.isEmpty()) { // Jos nimi on jätetty tyhjäksi, olkoon hän anonyymi.
+            kirjoittaja = "Anonyymi";
+        }
         Integer monesko = 1;
         Connection conn = database.getConnection();
         PreparedStatement mones = conn.prepareStatement("SELECT viesti.moneskoviesti AS mones FROM Viesti WHERE viesti.aiheid = ?"

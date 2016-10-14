@@ -28,15 +28,15 @@ public class AiheDao implements Dao<Aihe, Integer> {
         ResultSet rs = stmt.executeQuery();
         boolean hasOne = rs.next();
         if (!hasOne) {
-            return null;
-        }
+        return null;
+    }
         Integer id = rs.getInt("id");
         String nimi = rs.getString("nimi");
         String kuvaus = rs.getString("kuvaus");
         Integer alueid = rs.getInt("alueid");
         String kirjoittaja = rs.getString("kirjoittaja");
         String luotu = rs.getString("luotu");
-            
+
         Aihe aihe = new Aihe(id, alueid, kirjoittaja, nimi, kuvaus, luotu, null, null);
 
 
@@ -49,24 +49,7 @@ public class AiheDao implements Dao<Aihe, Integer> {
 
     @Override
     public List<Aihe> findAll() throws SQLException {
-        Connection conn = database.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Aihe");
-        
-        ResultSet rs = stmt.executeQuery();
-        List<Aihe> aiheet = new ArrayList<>();
-        while(rs.next()) {
-            Integer id = rs.getInt("id");
-            Integer alueid = rs.getInt("alueid");
-            String nimi = rs.getString("nimi");
-            String kuvaus = rs.getString("kuvaus");
-            String luotu = rs.getString("luotu");
-            String kirjoittaja = rs.getString("kirjoittaja");
-            
-            aiheet.add(new Aihe(id, alueid, kirjoittaja, nimi, kuvaus, luotu, null, null));
-
-        }
-        
-        return aiheet;
+        return null;
     }
 
     @Override
@@ -74,9 +57,9 @@ public class AiheDao implements Dao<Aihe, Integer> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    // Käyttötapaus 2/3
     public List<Aihe> getAiheet(Integer id) throws SQLException {
         Connection connection = database.getConnection();
-        //käyttötapaus 2/3 kysely
         PreparedStatement kysy = connection.prepareStatement("SELECT Alue.nimi AS alue FROM Alue WHERE Alue.id = ?");
         kysy.setObject(1, id);
         ResultSet alueNimi = kysy.executeQuery();
@@ -108,8 +91,11 @@ public class AiheDao implements Dao<Aihe, Integer> {
 
         return aiheet;
     }
-
+    // Tallentaa tietokantaan aiheen.
     public void save(Integer alueid, String nimi, String kuvaus, String kirjoittaja) throws Exception {
+        if(kirjoittaja.isEmpty()) { //Asettaa tyhjän käyttäjänimen anonyymiksi.
+            kirjoittaja = "Anonyymi";
+        }
         Connection conn = database.getConnection();
         PreparedStatement aika = conn.prepareStatement("SELECT DATETIME('now', 'localtime')");
         ResultSet rs = aika.executeQuery();
@@ -128,5 +114,21 @@ public class AiheDao implements Dao<Aihe, Integer> {
         stmt.close();
         conn.close();
     }
-    
+
+    //Palauttaa uusimman aiheen ID:n, jotta uuden aiheen aloitusviestin yhteydessä tiedetään mikä AIHEID viestille asetetaan.
+    public Integer getMaxId() throws Exception {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT aihe.id FROM aihe ORDER BY id DESC LIMIT 1");
+        ResultSet rs = stmt.executeQuery();
+        boolean hasOne = rs.next();
+        if (!hasOne) {
+            return null;
+        }
+        int id = rs.getInt(1);
+
+        rs.close();
+        stmt.close();
+        connection.close();
+        return id;
+    }
 }

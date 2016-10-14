@@ -3,7 +3,7 @@
 
     <head>
         <title>Otsikko</title>
-        <meta charset="utf-8" />
+        <meta charset="UTF-8" />
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
         <link rel="stylesheet" type="text/css" href="http://www.polyconvex.com/tikape/site.css"></link>        
     </head>
@@ -15,12 +15,14 @@
             <div class="col-md-10 col-md-offset-1 PanelContainer">
 
 <!-- HUOM! Pitäisikö alla olevan tableHeaders-taulukon näyttää Aluenimi (niinkuin nyt on), 
-    sitten Aiheiden lukumäärä viestien lukumäärän sijaan? --> 
+    sitten Aiheiden lukumäärä viestien lukumäärän sijaan? 
+        - Ei ainakaan tehtävänannossa, ja mielestäni viestien lkm on ehkä vähän havainnollistavampaa kuin aiheiden lkm. t. Matti 
+          Tähän voisi lisätä alueiden kuvaukset vielä, eli ihan perus ${alue.kuvaus} nimellä thymeleaf tietää mitä hakea näytettäväksi --> 
 
                 <table>
                     <tr class="tableHeaders">
                         <th>Alue</th>
-                        <th>Aiheiden määrä</th>
+                        <th>Viestejä yhteensä</th>
                         <th>Viimeisin viesti</th>
                     </tr>
                     <tr class="panel tauluPanel" th:each="alue: ${alueet}">

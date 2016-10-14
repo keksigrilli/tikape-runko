@@ -10,10 +10,11 @@
 
     <body>
         <h1>Luo uusi alue</h1>
+        <a th:href="@{~/alueet}">Takaisin</a>
         <h2><span th:text="${nimiPuuttuu}">täytyy olla nimi</span></h2>
-        <form method="POST">
+        <form method="POST" id="posti">
             Nimi: <input type="text" name="nimi"/><br/>
-            Lyhyt kuvaus:  <input type="text" name="kuvaus"/><br/>
+            Lyhyt kuvaus:  <textarea rows="2" cols="50" name="kuvaus" id="posti"/><br/>
              <input type="submit" value="viestita"/>
         </form>
     </body>

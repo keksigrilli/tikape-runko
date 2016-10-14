@@ -14,13 +14,14 @@
             <h1 class="mainTitle">Alue: <span th:text="${alue.nimi}"></span>!</h1>
             <div class="col-md-10 col-md-offset-1 PanelContainer">
 
-
+        <a th:href="@{~/alueet}">Takaisin</a>        
                 <table>
                     <tr class="tableHeaders">
                         <th>Aihe</th>
                         <th>Viestimäärä</th>
                         <th>Viimeisin viesti</th>
                     </tr>
+                    <!-- Tänne lisää tietoa, aiheesta löytyy kuvaus, kirjoittaja ja luomispäivämäärä jne.-->
                     <tr class="panel tauluPanel" th:each="aihe: ${aiheet}">
                         <td>
                             <a th:href="@{~/aiheet/{id}/1 (id=${aihe.id})}"><span th:text="${aihe.nimi}">aiheen nimi</span></a>

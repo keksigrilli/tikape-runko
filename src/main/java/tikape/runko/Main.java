@@ -11,7 +11,6 @@ import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import tikape.runko.database.AiheDao;
 import tikape.runko.database.AlueDao;
 import tikape.runko.database.Database;
-import tikape.runko.database.OpiskelijaDao;
 import tikape.runko.database.ViestiDao;
 import tikape.runko.domain.Aihe;
 import tikape.runko.domain.Alue;
@@ -28,7 +27,6 @@ public class Main {
         // Mutta katsokaa siinä tapauksessa tarkkaan Forumin sarakkeiden nimet ja määrät,
         // Ne eivät täsmää 100% raportissa määritellyihin CREATE TABLE -lauseihin.
         database.init();
-        OpiskelijaDao opiskelijaDao = new OpiskelijaDao(database);
 
         AlueDao alueDao = new AlueDao(database);
         AiheDao aiheDao = new AiheDao(database);
@@ -68,7 +66,7 @@ public class Main {
             map.put("nimiPuuttuu", "Alueella täytyy olla nimi!");
             String nimi = req.queryParams("nimi");
             String kuvaus = req.queryParams("kuvaus");
-            if(nimi.isEmpty()) {
+            if(nimi.isEmpty()) { // Jos nimikenttä on tyhjä, ladataan sivu uudestaan, tälläkertaa HashMapilla, jossa on "nimipuuttuu" olio.
                 return new ModelAndView(map,  "luoAlue");
             }
             alueDao.save(nimi, kuvaus);
@@ -78,6 +76,7 @@ public class Main {
         
         get("/alueet/:alueid/luo", (req, res) -> { // Hakee sivun jossa voi luoda uusia aiheita. TÄssä ei oikeastaan tapahdu mitään.
             HashMap map = new HashMap<>();
+            map.put("takas", req.params("alueid"));
             
 
             return new ModelAndView(map, "luoAihe");
@@ -85,14 +84,23 @@ public class Main {
         
          post("/alueet/:alueid/luo", (req, res) -> { // Luo uuden aiheen valittuun alueeseen.
             HashMap map = new HashMap<>();
-            map.put("nimiPuuttuu", "Aiheella täytyy olla nimi!");
+            String viesti = req.queryParams("viesti");
             String nimi = req.queryParams("nimi");
             String kuvaus = req.queryParams("kuvaus");
             String kirjoittaja = req.queryParams("kirjoittaja");
-            if(nimi.isEmpty()) {
+            if(nimi.isEmpty() && viesti.isEmpty()) { // Tarkistetaan täyttyvätkö ehdot. TÄTÄ VOISI MUOKATA TIETOKANNAN VARCHAR-MUUTTUJIEN MUKAISEKSI.
+                map.put("nimiviestiPuuttuu", "Aiheella täytyy olla nimi ja aloitusviesti!");
+                return new ModelAndView(map, "luoAihe");
+            } else if(nimi.isEmpty()) {
+                map.put("nimiPuuttuu", "Aiheella täytyy olla nimi!");
                 return new ModelAndView(map,  "luoAihe");
+            } else if(viesti.isEmpty()) {
+                map.put("viestiPuuttuu", "Kirjoita aiheelle aloitusviesti!");
+                return new ModelAndView(map, "luoAihe");
             }
+            
             aiheDao.save(Integer.parseInt(req.params("alueid")), nimi, kuvaus, kirjoittaja);
+            viestiDao.save(kirjoittaja, viesti, aiheDao.getMaxId());
             res.redirect("/alueet/" +req.params("alueid"));
             return new ModelAndView(map,  "luoAihe");
         }, new ThymeleafTemplateEngine());
@@ -103,22 +111,37 @@ public class Main {
             // getViestit hakee nyt sivunumeron mukaisesti oikeat viestit.
             map.put("viestit", viestiDao.getViestit(Integer.parseInt(req.params("id")), Integer.parseInt(req.params("page"))));
             //Seuraava osa syöttää nettisivulle seuraavan sivun luvun page-muuttujana.
-            map.put("next", Integer.parseInt(req.params("page")) +1);
-            map.put("prev", Integer.parseInt(req.params("page")) -1);
+            // Jos sivunumero = maxPage, eli pienin sivunumero, jolla aiheen viimeiset viestit näkyvät
+            // asetetaan "next"in arvolle sama arvo kuin nykyisellä sivulla.
+            // Jos sivunumero = 1, niin "prev"in arvoksi asetetaan 1, jotta sivunumero ei voi laskea nollaan ja sitä alemmas.
+            int maxPage = viestiDao.maxPage(Integer.parseInt(req.params("id")));
+            if(Integer.parseInt(req.params("page"))< maxPage  ){
+                map.put("next", Integer.parseInt(req.params("page")) +1);
+            } else {
+                map.put("next", maxPage);
+            } if(Integer.parseInt(req.params("page")) > 1) {
+                map.put("prev", Integer.parseInt(req.params("page")) -1);
+            } else {
+                map.put("prev", 1);
+            }
+            map.put("last", maxPage);
+            // Olisiko syytä laittaa Edellinen aihe - Seuraava aihe selaus? Se tuntuisi tosin olevan hieman tavallista hankalempaa,
+            // eikä ole niin sanotusti vaadittu tehtävänannossa.
 
             return new ModelAndView(map, "aihe");
         }, new ThymeleafTemplateEngine());
         
         post("/aiheet/:id/:page", (req, res) -> { // Ottaa vastaan aiheeseen lähetettyä tietoa. Uusia viestejä, näytettävien viestin lkm.
-            if(!req.queryParams("viesti").isEmpty()){
-                String nimi = req.queryParams("nimi");
+            if(req.queryParams("viesti") != null){ // if-lauseet pitävät huolen että data syötetään oikeassa muodossa.
+                String nimi = req.queryParams("nimi"); // täälläkin voisi muokata if-lauseita ottamaan huomioon tietokanna varChar vaatimukset.
                 String viesti = req.queryParams("viesti");
                 viestiDao.save(nimi, viesti, Integer.parseInt(req.params("id")));
             }
             if(req.queryParams("lkm") != null) {
                 viestiDao.setLkm(Integer.parseInt(req.queryParams("lkm")));
+                res.redirect("/aiheet/" +Integer.parseInt(req.params("id")) +"/" +Integer.parseInt(req.params("page")));
             }
-            res.redirect("/aiheet/" +Integer.parseInt(req.params("id")) +"/" +Integer.parseInt(req.params("page")));
+            res.redirect("/aiheet/" +Integer.parseInt(req.params("id")) +"/" +viestiDao.maxPage(Integer.parseInt(req.params("id"))));
             return "";
             
         });
