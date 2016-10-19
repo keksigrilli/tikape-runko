@@ -8,7 +8,7 @@
         <link rel="stylesheet" type="text/css" href="http://www.polyconvex.com/tikape/site.css"></link>  
     </head>
 
-    <body>
+    <body th:inline="text">
         <h1>Aihe: <span th:text="${aihe.nimi}"></span>!</h1>
         <!-- Tähän kohtaan ehkä enemmän tietoa aiheesta? Löytyy kirjoittaja, kuvaus, luomispvm jne. Getterit luokassa aihe -->
 
@@ -36,7 +36,7 @@
                 <div class="innerPad">
                 
                 <p class="viesti" th:each="viesti: ${viestit}">
-                    <span class="viestinumero" th:text="${viesti.moneskoViesti}"></span><span th:text="${viesti.sisalto}">viestin sisalto</span><span th:text="${viesti.pvm}">viestin pvm</span>
+                    <span class="viestinumero" th:text="${viesti.moneskoViesti}"></span><span th:text="${viesti.sisalto}">viestin sisalto</span><span>[[${viesti.kirjoittaja}]], [[${viesti.pvm}]]</span>
                 </p>
 
                 <form class="viestiFormi" method="POST" id="posti">
