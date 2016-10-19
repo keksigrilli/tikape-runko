@@ -34,7 +34,7 @@ public class Main {
 
         get("/", (req, res) -> { // Hakee indeksin
             HashMap map = new HashMap<>();
-            map.put("viesti", "tervehdys");
+            map.put("viesti", "Tervetuloa Derail-keskustelufoorumille!");
 
             return new ModelAndView(map, "index");
         }, new ThymeleafTemplateEngine());

@@ -109,7 +109,6 @@ public class AiheDao implements Dao<Aihe, Integer> {
         stmt.setObject(4, kirjoittaja);
         stmt.setObject(5, luotu);
 
-        
         stmt.execute();
         stmt.close();
         conn.close();

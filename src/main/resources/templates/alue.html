@@ -12,9 +12,9 @@
         
         <div class="row text-center mainContainer">
             <h1 class="mainTitle">Alue: <span th:text="${alue.nimi}"></span>!</h1>
+             <a class="btn nappulaBack" th:href="@{~/alueet}">Takaisin</a>       
             <div class="col-md-10 col-md-offset-1 PanelContainer">
-
-        <a class="btn nappulaBack" th:href="@{~/alueet}">Takaisin</a>        
+ 
                 <table>
                     <tr class="tableHeaders">
                         <th>Aihe</th>
@@ -37,7 +37,10 @@
             </div> 
         </div>        
         
-        
+                
+        <div id="particles-js"></div>
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>   
+        <script src="http://polyconvex.com/tikape/config.js"></script> 
        
     </body>
 </html>

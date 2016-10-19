@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>Otsikko</title>
+        <title>Alueet</title>
         <meta charset="UTF-8" />
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
         <link rel="stylesheet" type="text/css" href="http://www.polyconvex.com/tikape/site.css"></link>        
@@ -12,6 +12,7 @@
 
         <div class="row text-center mainContainer">
             <h1 class="mainTitle">Alueet</h1>
+            <a class="btn nappula bluexx" th:href="@{~/}">Takaisin etusivulle</a>  
             <div class="col-md-10 col-md-offset-1 PanelContainer">
 
 <!-- HUOM! Pitäisikö alla olevan tableHeaders-taulukon näyttää Aluenimi (niinkuin nyt on), 
@@ -24,11 +25,13 @@
                         <th>Alue</th>
                         <th>Viestejä yhteensä</th>
                         <th>Viimeisin viesti</th>
+                        <th>Alueen Kuvaus</th>
                     </tr>
                     <tr class="panel tauluPanel" th:each="alue: ${alueet}">
                         <td><a th:href="${'/alueet/' +alue.id}"><span th:text="${alue.nimi}">Alueen nimi</span></a></td>
                         <td><span th:text="${alue.viestit}">Alueen viestit</span></td>
                         <td><span th:text="${alue.viimeisin}">Alueen viimeisin viesti</span></td>
+                        <td><span th:text="${alue.kuvaus}">Alueen Kuvaus</span></td>
                     </tr>  
 
 
@@ -38,5 +41,10 @@
             </div> 
         </div>
 
+                
+        <div id="particles-js"></div>
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>   
+        <script src="http://polyconvex.com/tikape/config.js"></script> 
+        
     </body>
 </html>
