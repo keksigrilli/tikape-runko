@@ -8,13 +8,12 @@
         <link rel="stylesheet" type="text/css" href="http://www.polyconvex.com/tikape/site.css"></link>        
     </head>
 
-    <body th:inline="text">
+    <body>
         
         <div class="row text-center mainContainer">
             <h1 class="mainTitle">Alue: <span th:text="${alue.nimi}"></span>!</h1>
              <a class="btn nappulaBack" th:href="@{~/alueet}">Takaisin</a>       
             <div class="col-md-10 col-md-offset-1 PanelContainer">
- 
                 <table>
                     <tr class="tableHeaders">
                         <th>Aihe</th>
@@ -24,8 +23,8 @@
                     <!-- Tänne lisää tietoa, aiheesta löytyy kuvaus, kirjoittaja ja luomispäivämäärä jne.-->
                     <tr class="panel tauluPanel" th:each="aihe: ${aiheet}">
                         <td>
-                            <a th:href="@{~/aiheet/{id}/1 (id=${aihe.id})}"><span th:text="${aihe.nimi}">aiheen nimi</span></a>
-                            <br/><p>[[${aihe.kirjoittaja}]], [[${aihe.luotu}]] </p>
+                            <a th:href="@{~/alueet/{alueid}/aiheet/{id}/1 (alueid=${aihe.alueid}, id=${aihe.id})}"><span th:text="${aihe.nimi}">aiheen nimi</span></a>
+                            <br/><p><span th:text="${aihe.kirjoittaja +', ' +aihe.luotu}"></span></p>
                         </td>
                         <td><span th:text="${aihe.viestit}">aiheen viestit</span></td>
                         <td><span th:text="${aihe.viimeisin}">aiheen viimeisin viesti</span></td>
@@ -33,6 +32,7 @@
 
 
                 </table>
+                <h2><span th:text="${eiAiheita}"></span></h2>
 
                  <a class="btn nappula" th:href="@{~/alueet/{id}/luo (id = ${alue.id})}"><span>luo aihe</span></a>
             </div> 

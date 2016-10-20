@@ -61,7 +61,6 @@ public class ViestiDao implements Dao<Viesti, Integer> {
             Integer aiheid = rs.getInt("AIHEID");
             String aika = rs.getString("AIKA");
             Integer monesko = rs.getInt("MONESKO");
-            System.out.println(kirjoittaja +", " +sisalto +", " +aika +", " +monesko);
             
             viestit.add(new Viesti(id, aiheid, kirjoittaja, sisalto, aika, monesko));
         }
@@ -87,7 +86,7 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         if(!onko) {
             return 0;
         }
-        int maara = rs.getInt("MAARA");
+        int maara = rs.getInt("MAARA") -1;
         rs.close();
         viestit.close();
         conn.close();
