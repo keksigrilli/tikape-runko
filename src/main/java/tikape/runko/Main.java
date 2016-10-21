@@ -1,7 +1,6 @@
 package tikape.runko;
 
 import java.util.HashMap;
-
 import spark.ModelAndView;
 import static spark.Spark.*;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -64,7 +63,6 @@ public class Main {
                 map.put("prev", 1);
             }
             map.put("last", maxPage);
-
             return new ModelAndView(map, "alue");
         }, new ThymeleafTemplateEngine());
 
@@ -149,6 +147,7 @@ public class Main {
                 map.put("liianPitka", "Viesti voi olla korkeintaan " + maxViestiPituus
                         + " merkkiä!");
                 return new ModelAndView(map, "luoAihe");
+
             }
 
             aiheDao.save(Integer.parseInt(req.params("alueid")), nimi, kuvaus, kirjoittaja);
@@ -214,7 +213,7 @@ public class Main {
             }
             if (req.queryParams("lkm") != null) {
                 viestiDao.setLkm(Integer.parseInt(req.queryParams("lkm")));
-                res.redirect("/alueet/" + Integer.parseInt(req.params("alueid")) + "/aiheet/" + Integer.parseInt(req.params("id")) + "/" + Integer.parseInt(req.params("page")));
+                res.redirect("/alueet/" + Integer.parseInt(req.params("alueid")) + "/aiheet/" + Integer.parseInt(req.params("id")) + "/1");
             }
             res.redirect("/alueet/" + Integer.parseInt(req.params("alueid")) + "/aiheet/" + Integer.parseInt(req.params("id")) + "/" + viestiDao.maxPage(Integer.parseInt(req.params("id"))));
             return new ModelAndView(map, "aihe");

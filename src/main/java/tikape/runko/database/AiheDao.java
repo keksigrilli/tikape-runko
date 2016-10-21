@@ -15,6 +15,7 @@ import tikape.runko.domain.Aihe;
 
 public class AiheDao implements Dao<Aihe, Integer> {
 
+
     private Database database;
     private int lkm;
 
@@ -98,7 +99,6 @@ public class AiheDao implements Dao<Aihe, Integer> {
 
         return aiheet;
     }
-
     // Tallentaa tietokantaan aiheen.
 
     public void save(Integer alueid, String nimi, String kuvaus, String kirjoittaja) throws Exception {
