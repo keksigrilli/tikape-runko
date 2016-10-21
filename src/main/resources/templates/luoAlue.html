@@ -1,0 +1,38 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Luo Alue</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" type="text/css" href="http://www.polyconvex.com/tikape/site.css"></link>        
+    </head>
+
+    <body>
+
+        <div class="row text-center mainContainer">
+            <h1>Luo uusi alue</h1>
+            <a class="btn nappulaBack" th:href="@{~/alueet}">Takaisin</a>
+            <div class="col-md-8 col-md-offset-2 luoAiheContainer">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">        
+
+                        <h2><span th:text="${virheilmoitus}">tähän tulee virheteksti</span></h2>
+                        <form method="POST" id="posti">
+                            <span class="formTitle">Alueen nimi:</span> <input class="formBlock" type="text" name="nimi"/>
+                            <span class="formTitle">Lyhyt kuvaus:</span>  <textarea class="formBlock" rows="2" cols="50" name="kuvaus" id="posti"/>
+                            <input class="sendMessage aihebutton" type="submit" value="LUO ALUE"/>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="particles-js"></div>
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>   
+        <script src="http://polyconvex.com/tikape/config.js"></script>         
+    </body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Derail Keskustelupalsta</title>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" type="text/css" href="http://www.polyconvex.com/tikape/site.css"></link>        
+    </head>
+    <body>
+        <!-- Indexin voisi stailata vähän fiksummaksi :D vaikka se derail bingo -kuva ja joku hieno "astu sisään" tyylinen nappi -->
+         <div class="row text-center mainContainer">
+             <h1>Derail Forum</h1>
+             
+             <div class="col-md-8 col-md-offset-2 luoAiheContainer marginat0r">
+
+                 <h3 class="bottomx" th:text="${viesti}"></h3>
+
+                <p>Tänne postatut kommentit, tarinat ja tiedot ovat artistisia näkemyksiä fiktiosta ja epätotuuksista.<br/>Vain hölmö tulkitsisi foorumin postauksien pohjautuvan faktoihin.</p>
+                <p><a href="/alueet" class="btn nappula">ASTU SISÄÄN</a></p>
+                <a href="/alueet"><img src="http://www.polyconvex.com/tikape/derail.jpg" class="indexImg" /></a>
+
+                <p><a href="/alueet" class="btn nappula">ASTU SISÄÄN</a></p>
+           
+             </div>
+         </div>
+        
+        <div id="particles-js"></div>
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>   
+        <script src="http://polyconvex.com/tikape/config.js"></script> 
+    </body>
+</html>

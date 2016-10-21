@@ -1,0 +1,58 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Otsikko</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" type="text/css" href="http://www.polyconvex.com/tikape/site.css"></link>        
+    </head>
+
+    <body>
+
+        <div class="row text-center mainContainer">
+            <h1 class="mainTitle">Alue: <span th:text="${alue.nimi}"></span></h1>
+            <a class="btn nappulaBack" th:href="@{~/alueet}">Takaisin</a>       
+            <div class="col-md-10 col-md-offset-1 PanelContainer">
+                <table>
+                    <tr class="tableHeaders">
+                        <th>Aihe</th>
+                        <th>Viestimäärä</th>
+                        <th>Viimeisin viesti</th>
+                    </tr>
+                    <!-- Tänne lisää tietoa, aiheesta löytyy kuvaus, kirjoittaja ja luomispäivämäärä jne.-->
+                    <tr class="panel tauluPanel" th:each="aihe: ${aiheet}">
+                        <td>
+                            <a th:href="@{~/alueet/{alueid}/aiheet/{id}/1 (alueid=${aihe.alueid}, id=${aihe.id})}">
+                                <span th:text="${aihe.nimi}">aiheen nimi</span></a><br/>
+                                <span th:text="${aihe.kuvaus}">aiheen kuvaus</span>
+                                <br/><span th:text="${aihe.kirjoittaja +', ' +aihe.luotu}">aiheen kirjoittaja ja pvm</span>
+                    
+                        </td>
+                        <td><span th:text="${aihe.viestit}">aiheen viestit</span>
+                            </td>
+                        <td><span th:text="${aihe.viimeisin}">aiheen viimeisin viesti</span></td>
+                    </tr>  
+
+
+                </table>
+                <h2><span th:text="${eiAiheita}"></span></h2>
+
+                <a class="btn nappula" th:href="@{~/alueet/{id}/aihe/luo (id = ${alue.id})}"><span>luo aihe</span></a>
+            </div> 
+        </div>        
+        <div class="viestitFooter">
+            <!-- Näiden linkkejen ulkoasua voisi siistiä -->
+            <a th:href="@{~/alueet/{id}/1 (id=${alue.id})}">Ensimmäinen sivu</a>
+            <a th:href="@{~/alueet/{id}/{prev} (id=${alue.id}, prev=${prev})}"> Edellinen sivu </a>
+            <a th:href="@{~/alueet/{id}/{next} (id=${alue.id}, next=${next})}"> Seuraava sivu </a>
+            <a th:href="@{~/alueet/{id}/{last} (id=${alue.id}, last=${last})}">Viimeinen sivu</a>
+        </div>                
+
+
+        <div id="particles-js"></div>
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>   
+        <script src="http://polyconvex.com/tikape/config.js"></script> 
+
+    </body>
+</html>

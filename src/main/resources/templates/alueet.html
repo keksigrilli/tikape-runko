@@ -1,0 +1,49 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Alueet</title>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" type="text/css" href="http://www.polyconvex.com/tikape/site.css"></link>        
+    </head>
+
+    <body>
+
+        <div class="row text-center mainContainer">
+            <h1 class="mainTitle">Alueet</h1>
+            <a class="btn nappula bluexx" th:href="@{~/}">Takaisin etusivulle</a>  
+            <div class="col-md-10 col-md-offset-1 PanelContainer">
+
+<!-- HUOM! Pitäisikö alla olevan tableHeaders-taulukon näyttää Aluenimi (niinkuin nyt on), 
+    sitten Aiheiden lukumäärä viestien lukumäärän sijaan? 
+        - Ei ainakaan tehtävänannossa, ja mielestäni viestien lkm on ehkä vähän havainnollistavampaa kuin aiheiden lkm. t. Matti 
+          Tähän voisi lisätä alueiden kuvaukset vielä, eli ihan perus ${alue.kuvaus} nimellä thymeleaf tietää mitä hakea näytettäväksi --> 
+
+                <table>
+                    <tr class="tableHeaders">
+                        <th>Alue</th>
+                        <th>Viestejä yhteensä</th>
+                        <th>Viimeisin viesti</th>
+                    </tr>
+                    <tr class="panel tauluPanel" th:each="alue: ${alueet}">
+                        <td><a th:href="${'/alueet/' +alue.id +'/1'}"><span th:text="${alue.nimi}">Alueen nimi</span></a><br/>
+                            <span th:text="${alue.kuvaus}"></span></td>
+                        <td><span th:text="${alue.viestit}">Alueen viestit</span></td>
+                        <td><span th:text="${alue.viimeisin}">Alueen viimeisin viesti</span></td>
+                    </tr>  
+
+
+                </table>
+
+                <a class="btn nappula" href="alue/luo"><span>luo alue</span></a>                    
+            </div> 
+        </div>
+
+                
+        <div id="particles-js"></div>
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>   
+        <script src="http://polyconvex.com/tikape/config.js"></script> 
+        
+    </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Aihe</title>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" type="text/css" href="http://www.polyconvex.com/tikape/site.css"></link>  
+    </head>
+
+    <body th:inline="text">
+        <h1><span th:text="${'Alue: ' +alue.nimi +' &rarr; ' +aihe.nimi}"></span></h1>
+        <!-- Tähän kohtaan ehkä enemmän tietoa aiheesta? Löytyy kirjoittaja, kuvaus, luomispvm jne. Getterit luokassa aihe -->
+
+        <a class="btn nappulaBack" th:href="@{~/alueet/{id}/1 (id = ${aihe.alueid})}">Takaisin</a>
+
+
+        <!-- Tänne viestin kirjoittaja näkyviin -->
+
+        <div class="row noPad areaContainer">
+
+            <div class="col-md-10 col-md-offset-1 viestitContainer">
+                <div class="viestitHeader">   
+                    <span class="changeroonieTitle">Viestien lkm:</span>
+                    <form class="changeroonie" method="POST">
+                        <select name="lkm">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="40">40</option>
+                            <option value="60">60</option>
+                        </select>
+                        <input class="changeroonieSubmit" type="submit" value="Vaihda lkm"/>
+                    </form> 
+                </div>              
+                
+                <div class="innerPad">
+                
+                <p class="viesti" th:each="viesti: ${viestit}">
+                    <span class="viestinumero" th:text="${viesti.moneskoViesti}"></span><span th:text="${viesti.sisalto}">viestin sisalto</span><span>[[${viesti.kirjoittaja}]], [[${viesti.pvm}]]</span>
+                </p>
+                <form class="viestiFormi" method="POST" id="posti">
+                    <h2><span th:text="${liianPitka}">ei saa olla liian pitkä</span></h2>
+                    Nimi:<br/>
+                    <input type="text" name="nimi"/><br/>
+                    <textarea rows ="10" cols="50" name="viesti" form="posti">Kirjoita viesti...</textarea>
+                    <input class="sendMessage" type="submit" value="viestitä"/>
+                </form>
+                    
+                </div> 
+                
+
+        <div class="viestitFooter">
+            <!-- Näiden linkkejen ulkoasua voisi siistiä -->
+            <a th:href="@{~/alueet/{alueid}/aiheet/{id}/1 (alueid=${aihe.alueid}, id=${aihe.id})}">Ensimmäinen sivu</a><a th:href="@{~/alueet/{alueid}/aiheet/{id}/{page}(alueid=${aihe.alueid}, id=${aihe.id}, page = ${prev})}"> Edellinen sivu </a>
+            <a th:href="@{~/alueet/{alueid}/aiheet/{id}/{page}(alueid=${aihe.alueid}, id=${aihe.id}, page = ${next})}"> Seuraava sivu </a><a th:href="@{~/alueet/{alueid}/aiheet/{id}/{last}(alueid=${aihe.alueid}, id=${aihe.id}, last=${last})}">Viimeinen sivu</a>
+        </div>                
+                    
+            </div>
+        </div>  
+                
+        <div id="particles-js"></div>
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>   
+        <script src="http://polyconvex.com/tikape/config.js"></script> 
+
+    </body>
+</html>
